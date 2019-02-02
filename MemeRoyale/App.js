@@ -2,7 +2,7 @@ import React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 import Homepage from './Homepage';
 import { Font, AppLoading } from 'expo';
-
+import SafeAreaView from 'react-native-safe-area-view';
 
 export default class App extends React.Component {
   constructor(props) {
@@ -13,29 +13,6 @@ export default class App extends React.Component {
       loggedIn : false,
       email : 'NaN',
       image: 'img://'
-    }
-  }
-
-  googleOAuthLogin = async() =>{
-    try{
-      const result = await Google.logInAsync({
-        androidClientId = clientID.android,
-        iosClientId: clientID.ios,
-        scopes: ['profile','email']
-      })
-      if(result === "success"){
-        this.setState({
-          loggedIn:true,
-          email:result.user.email,
-          image: result.user.photoUrl
-        })
-      }
-      else{
-        alert("Oof")
-      }
-    }
-    catch(e){
-      console.log("error",e)
     }
   }
   
@@ -49,13 +26,13 @@ export default class App extends React.Component {
     const { isLoading, loggedIn } = this.state;
 
     if (isLoading) {
-      return <View><Homepage /></View>
+      return <SafeAreaView><Homepage /></SafeAreaView>
     }
 
     else if (!loggedIn) {
-      <View style={styles.container}>
+      <SafeAreaView style={styles.container}>
         <Homepage /> 
-      </View>
+      </SafeAreaView>
     }
   }
 }

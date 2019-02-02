@@ -1,1 +1,9 @@
-{}
+{
+  "expoServerPort": 19000,
+  "expoServerNgrokUrl": "https://tt-bvr.anonymous.memeroyale.exp.direct",
+  "packagerNgrokUrl": "https://packager.tt-bvr.anonymous.memeroyale.exp.direct",
+  "ngrokPid": 13496,
+  "devToolsPort": 19002,
+  "packagerPort": 19001,
+  "packagerPid": 14388
+}
