@@ -27,5 +27,11 @@ export const defaultStyles = StyleSheet.create({
   image: {
     height: "100%",
     width: "100%"
+  }, 
+  meme: {
+    width: "100%",
+    height: 200,
+    margin: 15,
+    alignSelf: "center"
   }
 });

@@ -19,12 +19,6 @@ import { defaultStyles } from "./styles";
 
 const styles = StyleSheet.create({
   ...defaultStyles,
-  meme: {
-    width: "100%",
-    height: 200,
-    margin: 15,
-    alignSelf: "center"
-  }
 });
 
 export default class MemeResults extends React.Component {

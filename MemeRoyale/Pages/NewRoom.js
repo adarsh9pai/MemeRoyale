@@ -24,7 +24,7 @@ export default class NewRoom extends React.Component {
     this.state = {
       isRoomActive: false,
       users: [{ name: "Robert Brady" }],
-      roomName: '',
+      roomName: ""
     };
   }
 
@@ -38,39 +38,40 @@ export default class NewRoom extends React.Component {
   };
 
   render() {
-    const { isRoomActive, users } = this.state;
+    const { isRoomActive, users, roomName } = this.state;
 
     return (
       <View>
         <Header leftComponent={{ icon: "menu", color: "#fff" }} />
 
-        <Text style={styles.text}>
-          This is a description of what a new room is{" "}
-        </Text>
-        <Input
-          key="roomName"
-          placeholder="Room Name"
-          style={styles.text}
-          onChangeText={this.handleTextChange("roomName")}
-        />
-
         {// If the game has started then display the users in the game, otherwise show the 'create' button
         isRoomActive ? (
           <View>
             <Text h4 style={styles.text}>
-              Players ({users.length})
+              {roomName}'s Players ({users.length})
             </Text>
             <Divider />
             {users.map((user, i) => (
               <ListItem key={i} title={user.name} />
             ))}
+            <Button buttonStyle={styles.button} title='Start'></Button>
           </View>
         ) : (
-          <Button
-            title="Create"
-            buttonStyle={styles.button}
-            onPress={this.handleCreateRoom}
-          />
+          <View>
+            <Text style={styles.text}>
+              This is a description of what a new room is{" "}
+            </Text>
+            <Input
+              placeholder="Room Name"
+              style={styles.text}
+              onChangeText={this.handleTextChange("roomName")}
+            />
+            <Button
+              title="Create"
+              buttonStyle={styles.button}
+              onPress={this.handleCreateRoom}
+            />
+          </View>
         )}
       </View>
     );
