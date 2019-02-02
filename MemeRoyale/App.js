@@ -1,11 +1,14 @@
 import React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
-import Homepage from './Homepage';
 import { Font, AppLoading } from 'expo';
 import SafeAreaView from 'react-native-safe-area-view';
 import { Button, registerCustomIconType } from 'react-native-elements';
 import {Google} from 'expo'
-import Rooms from './Rooms'
+import Rooms from './Pages/Rooms'
+import RoomLoading from './Pages/RoomLoading';
+import Board from './Pages/Board';
+import MemeResults from './Pages/MemeResults';
+import NewRoom from './Pages/NewRoom';
 
 export default class App extends React.Component {
   constructor(props) {
@@ -59,7 +62,8 @@ export default class App extends React.Component {
       )
     }
     else{
-      return <Rooms />
+      // return <Rooms />
+      return <NewRoom />
     }
   }
 }

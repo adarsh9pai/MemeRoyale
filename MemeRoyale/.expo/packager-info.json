@@ -1,9 +1,9 @@
 {
-  "devToolsPort": 19003,
+  "devToolsPort": 19002,
   "expoServerPort": 19000,
   "packagerPort": 19001,
-  "packagerPid": 12083,
-  "expoServerNgrokUrl": "https://tt-bvr.adarsh9pai.memeroyale.exp.direct",
-  "packagerNgrokUrl": "https://packager.tt-bvr.adarsh9pai.memeroyale.exp.direct",
-  "ngrokPid": 12096
+  "packagerPid": 16828,
+  "expoServerNgrokUrl": "https://tt-bvr.anonymous.memeroyale.exp.direct",
+  "packagerNgrokUrl": "https://packager.tt-bvr.anonymous.memeroyale.exp.direct",
+  "ngrokPid": 6152
 }

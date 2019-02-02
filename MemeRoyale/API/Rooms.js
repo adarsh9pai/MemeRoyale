@@ -1,11 +1,11 @@
 export const getRooms = async()=>{
     const response = await fetch('http://34.238.153.107/rooms')
     const getResponse = await response.json()
-    console.log(getResponse.rooms[0].code)
-    alert(getResponse.rooms[0].code + " " + getResponse.rooms[0].name)
-
-    return [getResponse.rooms]
+    return getResponse.rooms;
 }
 
-
-//{"rooms":["name":"F0826","code":"F0826"}]}
+export const createRoom = async(roomName) => {
+    const response = await fetch(`http://34.238.153.107/rooms/create?name=${roomName}`)
+    const getResponse = await response.json()
+    // returns a success or failure response
+}
