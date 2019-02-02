@@ -1,6 +1,9 @@
 {
-  "expoServerPort": null,
-  "expoServerNgrokUrl": null,
-  "packagerNgrokUrl": null,
-  "ngrokPid": null
+  "expoServerPort": 19000,
+  "expoServerNgrokUrl": "https://sd-rce.anonymous.memeroyale.exp.direct",
+  "packagerNgrokUrl": "https://packager.sd-rce.anonymous.memeroyale.exp.direct",
+  "ngrokPid": 692,
+  "devToolsPort": 19002,
+  "packagerPort": 19001,
+  "packagerPid": 17044
 }
