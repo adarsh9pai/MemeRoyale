@@ -48,7 +48,7 @@ export default class Rooms extends React.Component {
           />
         ))}
 
-        <Button title="Add Room" buttonStyle={styles.button} onPress={this.handleAddRoom} />
+        <Button title="Add Room" buttonStyle={styles.button} onPress={() => this.props.navigation.navigate('NewRoom')} />
       </View>
     );
   }
