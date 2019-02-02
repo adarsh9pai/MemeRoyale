@@ -1,15 +1,16 @@
 import React from "react";
-import { Toolbar } from "react-native-material-ui";
-import { StyleSheet, Text, View, Button } from "react-native";
-import { Google } from 'expo';
-import { clientID } from './secret';
+import { StyleSheet, Text, View } from "react-native";
+import { Header, Button, Icon } from "react-native-elements";
+import { Google } from "expo";
+import { clientID } from "./secret";
+import Rooms from './Rooms';
 
 class Homepage extends React.Component {
   constructor(props) {
     super(props);
 
     this.state = {
-      loggedIn: false
+      loggedIn: true
     };
   }
 
@@ -38,19 +39,25 @@ class Homepage extends React.Component {
     const { loggedIn } = this.state;
 
     if (loggedIn) {
-      return <View />;
+      return <Rooms />;
     }
 
     return (
       <View>
-        <Toolbar leftElement="menu" centerElement="Searchable" />
+        <Header leftComponent={{ icon: "menu", color: "#fff" }} />
 
-        <Text>Sign in with Google</Text>
+        <Button
+          icon={<Icon name="arrow-right" size={15} color="white" />}
+          iconRight
+          title="Login with Google"
+        />
+
+        {/* <Text>Sign in with Google</Text>
         <Button
           primary
           title="Sign in with Google"
           onPress={this.googleOAuthLogin}
-        />
+        /> */}
       </View>
     );
   }
