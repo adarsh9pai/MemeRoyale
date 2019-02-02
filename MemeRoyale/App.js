@@ -5,6 +5,7 @@ import { Font, AppLoading } from 'expo';
 import SafeAreaView from 'react-native-safe-area-view';
 import { Button, registerCustomIconType } from 'react-native-elements';
 import {Google} from 'expo'
+import Rooms from './Rooms'
 
 export default class App extends React.Component {
   constructor(props) {
@@ -12,7 +13,7 @@ export default class App extends React.Component {
 
     this.state = {
       isLoading: true,
-      loggedIn : false,
+      loggedIn : true,
       email : 'NaN',
       image: 'img://'
     }
@@ -58,7 +59,7 @@ export default class App extends React.Component {
       )
     }
     else{
-
+      return <Rooms />
     }
   }
 }
