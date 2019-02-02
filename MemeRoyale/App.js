@@ -10,6 +10,7 @@ import Board from './Pages/Board';
 import MemeResults from './Pages/MemeResults';
 import NewRoom from './Pages/NewRoom';
 import CreateMeme from './Pages/CreateMeme';
+import {createStackNavigator, createAppContainer} from 'react-navigation';
 
 export default class App extends React.Component {
   constructor(props) {
@@ -22,7 +23,9 @@ export default class App extends React.Component {
       image: 'img://'
     }
   }
-  
+
+
+
   googleOAuthLogin = async () => {
     try {
       const result = await Google.logInAsync({
@@ -64,7 +67,7 @@ export default class App extends React.Component {
     }
     else{
       // return <Rooms />
-      return <CreateMeme />
+      return <AppContainer />
     }
   }
 }
@@ -86,8 +89,14 @@ const styles = StyleSheet.create({
   },
 });
 
-
-
-
+const AppNavigator = createStackNavigator({
+  Rooms: {
+    screen: Rooms
+  },
+  NewRoom:{
+    screen: NewRoom
+  }
+})
+const AppContainer = createAppContainer(AppNavigator)
 
 
