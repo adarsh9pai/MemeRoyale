@@ -1,6 +1,9 @@
 {
-  "expoServerPort": null,
-  "expoServerNgrokUrl": null,
-  "packagerNgrokUrl": null,
-  "ngrokPid": null
+  "expoServerPort": 19000,
+  "expoServerNgrokUrl": "https://h8-6qe.adarsh9pai.memeroyale.exp.direct",
+  "packagerNgrokUrl": "https://packager.h8-6qe.adarsh9pai.memeroyale.exp.direct",
+  "ngrokPid": 8784,
+  "devToolsPort": 19002,
+  "packagerPort": null,
+  "packagerPid": null
 }
