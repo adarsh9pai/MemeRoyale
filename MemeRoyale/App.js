@@ -3,6 +3,8 @@ import { StyleSheet, Text, View } from 'react-native';
 import Homepage from './Homepage';
 import { Font, AppLoading } from 'expo';
 import SafeAreaView from 'react-native-safe-area-view';
+import { Button, registerCustomIconType } from 'react-native-elements';
+import {Google} from 'expo'
 
 export default class App extends React.Component {
   constructor(props) {
@@ -16,29 +18,57 @@ export default class App extends React.Component {
     }
   }
   
+  googleOAuthLogin = async () => {
+    try {
+      const result = await Google.logInAsync({
+        androidClientId: clientID.android,
+        iosClientId: clientID.ios,
+        scopes: ["profile", "email"],
+        behavior: 'web'
+      });
+      if (result === "success") {
+        this.setState({
+          loggedIn: true,
+          email: result.user.email,
+          image: result.user.photoUrl
+        });
+      } else {
+        alert("Oof");
+      }
+    } catch (e) {
+      console.log("error", e);
+    }
+  }
+
   componentDidMount() {
     Font.loadAsync({
       'barlow': require('./assets/fonts/Barlow/Barlow-Medium.ttf'),
+      'Roboto': require('./assets/fonts/roboto/Roboto-Medium.ttf')
     })
   }
 
   render() {
     const { isLoading, loggedIn } = this.state;
 
-    if (isLoading) {
-      return <SafeAreaView><Homepage /></SafeAreaView>
-    }
-
-    else if (!loggedIn) {
+    if(!loggedIn) {
+      return(
       <SafeAreaView style={styles.container}>
-        <Homepage /> 
+        <LoginScreen googleOAuthLogin = {this.googleOAuthLogin}/> 
       </SafeAreaView>
+      )
+    }
+    else{
+
     }
   }
 }
 
 const LoginScreen = props =>{
-
+  return(
+  <View>
+    <Button title = "Continue with Google" onPress = {()=>props.googleOAuthLogin()}></Button>
+  </View>
+  )
 }
 
 const styles = StyleSheet.create({
