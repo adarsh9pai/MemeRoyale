@@ -60,6 +60,22 @@ export default class Board extends React.Component {
       if (room.currentChooser === this.user) {
         this.setState({ isChooser: true });
       }
+
+      // Create a time that checks if the meme has been selected
+      else {
+        this.hasMemeBeenSelectedTimer = setInterval(() => {
+          getRoom(this.room.code).then(room => {
+            if (room.isMemeSelected) {
+              clearInterval(this.hasMemeBeenSelectedTimer);
+              this.props.navigation.navigate("CreateMeme", {
+                room: this.room,
+                user: this.user,
+              });
+            }
+          }),
+            1000 * 1;
+        });
+      }
     });
     
     this.setState({
@@ -77,12 +93,13 @@ export default class Board extends React.Component {
     this.setState({ index: this.state.index + 1 });
   };
 
-  handleSelectMeme = () => {
-    // Handle API select MEME
-    this.props.navigation.navigate("CreateMeme", {
-      room: this.room,
-      user: this.user,
-      selectedImage: this.selectedImage
+
+  handleSelectMeme = (url = 'https://en.wikipedia.org/wiki/File:African_Bush_Elephant.jpg') => {
+    selectMeme(this.room.code, url).then(() => {
+      this.props.navigation.navigate("CreateMeme", {
+        room: this.room,
+        user: this.user
+      });
     });
   };
   
@@ -107,7 +124,7 @@ export default class Board extends React.Component {
         <CardButton onPress={() => {
           this.setState({selectedImage:item.link})
           console.log(this.state.selectedImage)
-          this.handleSelectMeme()
+          this.handleSelectMeme(this.state.selectedImage)
           }} title="Select" color="blue"/>
         </Card>
         )}
@@ -122,7 +139,7 @@ export default class Board extends React.Component {
       return (
         <View>
           <Text style={styles.textCenter}>
-            Please wait until everyone has submitted their caption
+            Please wait until the meme is revealed
           </Text>
           <ActivityIndicator style={styles.loading} />
         </View>

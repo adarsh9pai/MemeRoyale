@@ -1,18 +1,9 @@
 import React from "react";
 import { StyleSheet, View, ActivityIndicator } from "react-native";
-import {
-  Header,
-  Button,
-  Icon,
-  Text,
-  ListItem,
-  Divider,
-  Image,
-  Input
-} from "react-native-elements";
+import { Button, Text, Image, Input } from "react-native-elements";
 import { defaultStyles } from "./styles";
-import SocketIOClient from 'socket.io-client';
-
+import { getRoom } from "../API/Rooms";
+import { addCaption } from "../socket";
 
 const styles = StyleSheet.create({
   ...defaultStyles
@@ -23,25 +14,46 @@ export default class CreateMeme extends React.Component {
     super(props);
 
     this.state = {
-
-        caption: 'Sample Caption',
-        username: 'adarsh9pai@gmail.com',
-        roomName:'A2A41',
-        roomNumber: 'A2A41',
-
+      isSubmitted: false,
+      memeURL: null,
+      caption: "",
     };
-
-    // this.socket = SocketIOClient('http://34.238.153.107')
-    // this.socket.emit('user',this.state.username)
-    // this.socket.emit('room', {
-    //   name:this.state.roomName,
-    //   code:this.state.roomNumber
-    // })
-    // this.socket.on('debug',(data)=>{
-    //   console.log(data)
-    // })
   }
 
+  componentDidMount() {
+    this.room = this.props.navigation.getParam("room", null);
+    this.user = this.props.navigation.getParam("user", null);
+    
+    getRoom(this.room.code).then(room => {
+      // Get the current meme that was selected
+      this.setState({ memeURL: room.currentMeme });
+    });
+  }
+
+  handleSubmit = () => {
+    const { caption } = this.state;
+
+    addCaption(this.user, this.room.code, caption);
+    this.setState({isSubmitted: true});
+
+    // Create a timer to wait for everyone to finish submitting their captions
+    this.waitToFinishCaptionsTimer = setInterval(() => {
+      getRoom(this.room.code).then(room => {
+        if (room.isSubmissionEnded) {
+          clearInterval(this.waitToFinishCaptionsTimer);
+
+          this.props.navigation.navigate("Vote", {
+            room: this.room,
+            user: this.user
+          });
+        }
+      })
+    })
+  };
+
+  handleTextChange = id => text => {
+    this.setState({ [id]: text });
+  };
 
   render() {
     const { isSubmitted } = this.state;
@@ -57,40 +69,27 @@ export default class CreateMeme extends React.Component {
               source={{uri:this.props.navigation.getParam('selectedImage')}}
             />
 
-
             <Input
               placeholder="Caption"
               style={styles.text}
-              onChangeText={(data)=>{
-                this.setState({
-                  caption:data
-                })
-              }}
+              onChangeText={this.handleTextChange("caption")}
             />
 
             <Button
               buttonStyle={styles.buttonSecondary}
               title="Submit"
-              onPress={()=>{
-                this.socket.emit('caption',{
-                  name:this.state.username,
-                  caption:this.state.caption,
-                  code: this.state.roomNumber
-                })
-                this.props.navigation.navigate("Vote");
-              }}
+              onPress={this.handleSubmit}
             />
           </View>
         ) : (
           // tell the user that they need to wait until all other users have finished their captions
           <View>
             <Text style={styles.textCenter}>
-              Please wait until everyone has submitted their caption
+              Please wait until all Meme Lord's have finished meme-ing
             </Text>
             <ActivityIndicator style={styles.loading} />
           </View>
         )}
-
       </View>
     );
   }
