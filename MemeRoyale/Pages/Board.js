@@ -53,7 +53,7 @@ handleSelectMeme = ()=>{
     const { images,index } = this.state;
 
     return (
-      <View>
+      <View style={styles.background}>
           <Text h4 style={styles.textCenter}>Select an image to meme</Text>
           <Image
               style={styles.meme}
@@ -62,9 +62,9 @@ handleSelectMeme = ()=>{
              </Image>
 
              <View>
-                 <Button title="Back" disabled={index===0} onPress={this.handleBack}></Button>
-                 <Button title="Next" disabled = {index===images.length-1} onPress={this.handleNext}></Button>
-                 <Button title = "Select" onPress={this.handleSelectMeme}></Button>
+                 <Button title="Back" disabled={index===0} onPress={this.handleBack} buttonStyle={styles.button}></Button>
+                 <Button title="Next" disabled = {index===images.length-1} onPress={this.handleNext} buttonStyle={styles.button}></Button>
+                 <Button title = "Select" onPress={this.handleSelectMeme} buttonStyle={styles.buttonSecondary}></Button>
              </View>
       </View>
     );

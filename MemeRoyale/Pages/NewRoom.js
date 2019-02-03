@@ -45,8 +45,7 @@ export default class NewRoom extends React.Component {
     const { isRoomActive, users, roomName } = this.state;
 
     return (
-      <View>
-        <Header />
+      <View style={styles.background}>
 
         {// If the game has started then display the users in the game, otherwise show the 'create' button
         isRoomActive ? (
@@ -58,7 +57,7 @@ export default class NewRoom extends React.Component {
             {users.map((user, i) => (
               <ListItem key={i} title={user.name} />
             ))}
-            <Button buttonStyle={styles.button} title='Start' onPress={this.handleStartGame}></Button>
+            <Button buttonStyle={styles.buttonSecondary} title='Start' onPress={this.handleStartGame}></Button>
           </View>
         ) : (
           <View>

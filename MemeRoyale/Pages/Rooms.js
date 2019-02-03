@@ -1,6 +1,13 @@
 import React from "react";
 import { StyleSheet, View } from "react-native";
-import { Header, Button, Icon, Text, ListItem } from "react-native-elements";
+import {
+  Header,
+  Button,
+  Icon,
+  Text,
+  ListItem,
+  PricingCard
+} from "react-native-elements";
 import { getRooms } from "../API/Rooms";
 import { defaultStyles } from "./styles";
 import { ScrollView } from "react-native-gesture-handler";
@@ -15,7 +22,12 @@ export default class Rooms extends React.Component {
     super(props);
 
     this.state = {
-      rooms: []
+      rooms: [
+        {name: 'Room #1', numPeople: 12},
+        {name: 'Room #2', numPeople: 5},
+        {name: 'Room #3', numPeople: 8},
+        {name: 'Room #4', numPeople: 2},
+      ]
     };
   }
 
@@ -37,24 +49,29 @@ export default class Rooms extends React.Component {
     const { rooms } = this.state;
 
     return (
-      <View>
+      <View style={styles.background}>
         <ScrollView>
-          <Header />
           <Text h4 style={styles.text}>
             Available Rooms
           </Text>
 
           {rooms.map((room, i) => (
-            <ListItem
+            <PricingCard
               key={i}
+              color='#4F86C6'
+              containerStyle={{borderRadius: 10}}
+              infoStyle={styles.text}
               title={room.name}
-              onPress={this.handleRoomPress(room)}
+              price={room.numPeople}
+              info={["Members"]}
+              button={{ title: "JOIN", icon: "check" }}
+              onButtonPress={this.handleRoomPress(room)}
             />
           ))}
 
           <Button
             title="Add Room"
-            buttonStyle={styles.button}
+            buttonStyle={styles.buttonSecondary}
             onPress={() => this.props.navigation.navigate("NewRoom")}
           />
         </ScrollView>
