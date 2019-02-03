@@ -11,6 +11,7 @@ import MemeResults from './Pages/MemeResults';
 import NewRoom from './Pages/NewRoom';
 import CreateMeme from './Pages/CreateMeme';
 import {createStackNavigator, createAppContainer} from 'react-navigation';
+import MemeVoting from './Pages/MemeVoting';
 
 export default class App extends React.Component {
   constructor(props) {
@@ -98,7 +99,17 @@ const AppNavigator = createStackNavigator({
   },
   CreateMeme: {
     screen: CreateMeme,
-  }
+  },
+  Vote: {
+    screen: MemeVoting,
+  },
+  SelectMeme: {
+    screen: Board,
+  },
+  MemeResults: {
+    screen: MemeResults,
+  },
+
 })
 const AppContainer = createAppContainer(AppNavigator)
 

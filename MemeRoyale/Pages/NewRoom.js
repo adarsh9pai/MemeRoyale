@@ -38,7 +38,7 @@ export default class NewRoom extends React.Component {
   };
 
   handleStartGame = () => {
-    this.props.navigation.navigate("CreateMeme");
+    this.props.navigation.navigate("SelectMeme");
   }
 
   render() {

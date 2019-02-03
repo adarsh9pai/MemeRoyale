@@ -10,7 +10,6 @@ import {
   Image,
   Input
 } from "react-native-elements";
-import { getRooms } from "../API/Rooms";
 import { defaultStyles } from "./styles";
 
 const styles = StyleSheet.create({
@@ -32,10 +31,13 @@ export default class CreateMeme extends React.Component {
   };
 
   handleSubmitCaption = () => {
-      this.setState({isSubmitted: true});
+    // Uncomment this line below once it is time for API work
+    //this.setState({isSubmitted: true});
 
-      // API call to check when all users have completed their captions
-  }
+    // API call to check when all users have completed their captions
+    // on completion navigate to the voting page
+    this.props.navigation.navigate("Vote");
+  };
 
   render() {
     const { isSubmitted } = this.state;
@@ -45,7 +47,7 @@ export default class CreateMeme extends React.Component {
         <Header />
 
         {!isSubmitted ? (
-            // Let the user create their own caption
+          // Let the user create their own caption
           <View>
             <Image
               style={styles.meme}
@@ -59,15 +61,19 @@ export default class CreateMeme extends React.Component {
               onChangeText={this.handleTextChange("caption")}
             />
 
-            <Button buttonStyle={styles.button} title="Submit" onPress={this.handleSubmitCaption}/>
+            <Button
+              buttonStyle={styles.button}
+              title="Submit"
+              onPress={this.handleSubmitCaption}
+            />
           </View>
         ) : (
-            // tell the user that they need to wait until all other users have finished their captions
+          // tell the user that they need to wait until all other users have finished their captions
           <View>
-            <Text style={styles.text}>
+            <Text style={styles.textCenter}>
               Please wait until everyone has submitted their caption
             </Text>
-            <ActivityIndicator style={styles.loading}/>
+            <ActivityIndicator style={styles.loading} />
           </View>
         )}
       </View>

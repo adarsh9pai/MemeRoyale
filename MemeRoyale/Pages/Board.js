@@ -28,33 +28,44 @@ export default class Board extends React.Component {
     super(props);
 
     this.state = {
-      images: [1, 2, 3, 4, 5, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]
+        index:0,
+     images: [1, 2, 3, 4, 5],
+
     };
   }
 
   handleMemePress = meme => {};
 
+  handleBack = ()=>{
+      this.setState({index : this.state.index-1})
+  }
+
+  handleNext = ()=>{
+    this.setState({index : this.state.index+1})
+}
+
+handleSelectMeme = ()=>{
+    // Handle API select MEME
+    this.props.navigation.navigate("CreateMeme");
+}
+
   render() {
-    const { images } = this.state;
+    const { images,index } = this.state;
 
     return (
       <View>
-        <Header/>
+          <Text h4 style={styles.textCenter}>Select an image to meme</Text>
+          <Image
+              style={styles.meme}
+              resizeMode="contain"
+              source={require("../assets/images/elephant.jpg")}>
+             </Image>
 
-        <View style={styles.container}>
-          {images.map((image, i) => (
-            <TouchableHighlight
-              key={i}
-              style={styles.imageContainer}
-              onPress={this.handleMemePress}
-            >
-              <Image
-                style={styles.image}
-                source={require("../assets/images/elephant.jpg")}
-              />
-            </TouchableHighlight>
-          ))}
-        </View>
+             <View>
+                 <Button title="Back" disabled={index===0} onPress={this.handleBack}></Button>
+                 <Button title="Next" disabled = {index===images.length-1} onPress={this.handleNext}></Button>
+                 <Button title = "Select" onPress={this.handleSelectMeme}></Button>
+             </View>
       </View>
     );
   }

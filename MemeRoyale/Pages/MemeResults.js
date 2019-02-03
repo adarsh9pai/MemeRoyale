@@ -42,7 +42,6 @@ export default class MemeResults extends React.Component {
 
     return (
       <View>
-        <Header />
 
         <ScrollView>
           <Text h4 style={styles.textCenter}>
