@@ -43,9 +43,7 @@ export default class CreateMeme extends React.Component {
     const { isSubmitted } = this.state;
 
     return (
-      <View>
-        <Header />
-
+      <View style={styles.background}>
         {!isSubmitted ? (
           // Let the user create their own caption
           <View>
@@ -62,7 +60,7 @@ export default class CreateMeme extends React.Component {
             />
 
             <Button
-              buttonStyle={styles.button}
+              buttonStyle={styles.buttonSecondary}
               title="Submit"
               onPress={this.handleSubmitCaption}
             />

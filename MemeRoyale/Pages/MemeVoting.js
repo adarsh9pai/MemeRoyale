@@ -55,8 +55,7 @@ export default class MemeVoting extends React.Component {
     const { captions, checkedCaption } = this.state;
 
     return (
-      <View>
-        {/* <Header /> */}
+      <View style={styles.background}>
         <View>
           <ScrollView>
             <Text style={styles.textCenter}>{}'s Pick</Text>
@@ -71,21 +70,20 @@ export default class MemeVoting extends React.Component {
             {captions.map((caption, i) => (
               <ListItem
                 key={i}
+                title={caption.caption}
                 leftElement={
                   <CheckBox
                     center
                     checkedIcon="dot-circle-o"
-                    title={caption.caption}
                     uncheckedIcon="circle-o"
                     onPress={this.handleCaptionPress(i)}
-                    containerStyle={styles.checkBox}
                     checked={checkedCaption === i}
                   />
                 }
               />
             ))}
 
-            <Button title="Submit" buttonStyle={styles.button} onPress={this.handleSubmitPress}/>
+            <Button title="SUBMIT" buttonStyle={styles.button} onPress={this.handleSubmitPress}/>
           </ScrollView>
         </View>
       </View>

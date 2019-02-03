@@ -12,6 +12,17 @@ import NewRoom from './Pages/NewRoom';
 import CreateMeme from './Pages/CreateMeme';
 import {createStackNavigator, createAppContainer} from 'react-navigation';
 import MemeVoting from './Pages/MemeVoting';
+import { defaultStyles } from './Pages/styles';
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: '#fff',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  ...defaultStyles,
+})
 
 export default class App extends React.Component {
   constructor(props) {
@@ -68,7 +79,7 @@ export default class App extends React.Component {
     }
     else{
       // return <Rooms />
-      return <AppContainer />
+      return <AppContainer style={styles.background}/>
     }
   }
 }
@@ -80,15 +91,6 @@ const LoginScreen = props =>{
   </View>
   )
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});
 
 const AppNavigator = createStackNavigator({
   Rooms: {
