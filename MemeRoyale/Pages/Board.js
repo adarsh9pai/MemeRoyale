@@ -4,7 +4,8 @@ import {
   View,
   Image,
   TouchableHighlight,
-  ScrollView
+  ScrollView,
+  ActivityIndicator
 } from "react-native";
 import {
   Header,
@@ -13,10 +14,9 @@ import {
   Text,
   ListItem,
   Divider,
-  ActivityIndicator
 } from "react-native-elements";
 import { defaultStyles } from "./styles";
-import { getRoom } from "../API/Rooms";
+import { getRoom, selectMeme } from "../API/Rooms";
 
 const styles = StyleSheet.create({
   ...defaultStyles,
@@ -45,6 +45,22 @@ export default class Board extends React.Component {
       if (room.currentChooser === this.user) {
         this.setState({ isChooser: true });
       }
+
+      // Create a time that checks if the meme has been selected
+      else {
+        this.hasMemeBeenSelectedTimer = setInterval(() => {
+          getRoom(this.room.code).then(room => {
+            if (room.isMemeSelected) {
+              clearInterval(this.hasMemeBeenSelectedTimer);
+              this.props.navigation.navigate("CreateMeme", {
+                room: this.room,
+                user: this.user,
+              });
+            }
+          }),
+            1000 * 1;
+        });
+      }
     });
   }
 
@@ -58,11 +74,12 @@ export default class Board extends React.Component {
     this.setState({ index: this.state.index + 1 });
   };
 
-  handleSelectMeme = () => {
-    // Handle API select MEME
-    this.props.navigation.navigate("CreateMeme", {
-      room: this.room,
-      user: this.user,
+  handleSelectMeme = (url = 'https://en.wikipedia.org/wiki/File:African_Bush_Elephant.jpg') => {
+    selectMeme(this.room.code, url).then(() => {
+      this.props.navigation.navigate("CreateMeme", {
+        room: this.room,
+        user: this.user
+      });
     });
   };
 
@@ -110,7 +127,7 @@ export default class Board extends React.Component {
       return (
         <View>
           <Text style={styles.textCenter}>
-            Please wait until everyone has submitted their caption
+            Please wait until the meme is revealed
           </Text>
           <ActivityIndicator style={styles.loading} />
         </View>

@@ -1,10 +1,6 @@
 import React from "react";
 import { StyleSheet, View } from "react-native";
-import {
-  Button,
-  Text,
-  PricingCard
-} from "react-native-elements";
+import { Button, Text, PricingCard } from "react-native-elements";
 import { getRooms } from "../API/Rooms";
 import { defaultStyles } from "./styles";
 import { ScrollView } from "react-native-gesture-handler";
@@ -40,27 +36,25 @@ export default class Rooms extends React.Component {
     );
   }
 
-  componentWillUnmount() {
-    clearInterval(this.getRoomsInterval);
-  }
-
   handleRoomPress = room => () => {
     // Set the joined room to the state
     this.setState({ room: room }, () => {
       connectRoom(room);
+      clearInterval(this.getRoomsInterval);
 
       // Navigate to the page that displays which users are in the room
       this.props.navigation.navigate("RoomLoading", {
         room: room,
-        user: this.user,
+        user: this.user
       });
     });
   };
 
   handleAddRoom = () => {
     // Navigate to the page that lets the user create a room
+    clearInterval(this.getRoomsInterval);
     this.props.navigation.navigate("NewRoom", {
-      user: this.user,
+      user: this.user
     });
   };
 

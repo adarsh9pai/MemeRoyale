@@ -9,6 +9,7 @@ export const defaultStyles = StyleSheet.create({
     color: '#454552',
   },
   textCenter: {
+    margin: 15,
     textAlign: "center",
     color: '#454552',
   },
