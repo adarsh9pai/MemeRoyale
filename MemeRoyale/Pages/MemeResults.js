@@ -58,7 +58,7 @@ export default class MemeResults extends React.Component {
   handleNextRound = () => {
     nextRound(this.room.code).then(res => {
       console.log(res, 'going to next round');
-      this.props.navigation.navigator('SelectMeme', {
+      this.props.navigation.navigate('SelectMeme', {
         room: this.room,
         user: this.user,
       })
