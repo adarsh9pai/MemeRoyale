@@ -18,6 +18,8 @@ import CreateMeme from "./Pages/CreateMeme";
 import { createStackNavigator, createAppContainer } from "react-navigation";
 import MemeVoting from "./Pages/MemeVoting";
 import { defaultStyles } from "./Pages/styles";
+import clientID from './secret'
+import Modal from 'react-native-modal'
 
 const styles = StyleSheet.create({
   container: {
@@ -29,18 +31,50 @@ const styles = StyleSheet.create({
   ...defaultStyles
 });
 
+
 export default class App extends React.Component {
   constructor(props) {
     super(props);
 
     this.state = {
-      isLoading: false,
-      loggedIn: true,
-      email: "NaN",
-      image: "img://"
-    };
+      signedIn:false,
+      email : 'NaN',
+      image: 'img://',
+      name: 'xxxtentacion'
+    }
   }
 
+  createUser = async(email) =>{
+    const response = await fetch('http://34.238.153.107/users/create?username='+email)
+    const getResponse = await response.json()
+    console.log(getResponse)
+    return getResponse
+  }
+
+  googleOAuthLogin = async () => {
+    try {
+      const result = await Google.logInAsync({
+        androidClientId: clientID.android,
+        iosClientId: clientID.ios,
+        scopes: ["profile", "email"],
+        behavior: "web"
+      })
+      if (result.type === "success") {
+        this.setState({
+          signedIn: true,
+          email: result.user.email,
+          photoUrl: result.user.photoUrl,
+          name: result.user.name
+        })
+        this.createUser(this.state.email)
+      } else {
+        console.log("cancelled")
+      }
+} catch (e) {
+      console.log("error", e)
+    }
+}
+/*
   googleOAuthLogin = async () => {
     try {
       const result = await Google.logInAsync({
@@ -55,6 +89,7 @@ export default class App extends React.Component {
           email: result.user.email,
           image: result.user.photoUrl
         });
+        createUser(this.state.email)
       } else {
         alert("Oof");
       }
@@ -62,7 +97,7 @@ export default class App extends React.Component {
       console.log("error", e);
     }
   };
-
+*/
   componentDidMount() {
     Font.loadAsync({
       barlow: require("./assets/fonts/Barlow/Barlow-Medium.ttf"),
@@ -73,7 +108,7 @@ export default class App extends React.Component {
   render() {
     const { isLoading, loggedIn } = this.state;
 
-    if (!loggedIn) {
+    if (this.state.signedIn == false) {
       return (
         <SafeAreaView style={styles.container}>
           <LoginScreen googleOAuthLogin={this.googleOAuthLogin} />
@@ -124,3 +159,4 @@ const AppNavigator = createStackNavigator({
   }
 });
 const AppContainer = createAppContainer(AppNavigator);
+
