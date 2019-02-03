@@ -95,6 +95,9 @@ const AppNavigator = createStackNavigator({
   },
   NewRoom:{
     screen: NewRoom
+  },
+  CreateMeme: {
+    screen: CreateMeme,
   }
 })
 const AppContainer = createAppContainer(AppNavigator)

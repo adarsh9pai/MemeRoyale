@@ -39,7 +39,7 @@ export default class Board extends React.Component {
 
     return (
       <View>
-        <Header leftComponent={{ icon: "menu", color: "#fff" }} />
+        <Header/>
 
         <View style={styles.container}>
           {images.map((image, i) => (

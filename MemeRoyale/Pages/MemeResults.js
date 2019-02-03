@@ -42,7 +42,7 @@ export default class MemeResults extends React.Component {
 
     return (
       <View>
-        <Header leftComponent={{ icon: "menu", color: "#fff" }} />
+        <Header />
 
         <ScrollView>
           <Text h4 style={styles.textCenter}>

@@ -26,7 +26,7 @@ export default class RoomLoading extends React.Component {
   render() {
     return (
       <View>
-        <Header leftComponent={{ icon: "menu", color: "#fff" }}/>
+        <Header/>
 
         <Text h4 style={styles.text}>Lords</Text>
         <Divider></Divider>

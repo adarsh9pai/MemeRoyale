@@ -33,5 +33,8 @@ export const defaultStyles = StyleSheet.create({
     height: 200,
     margin: 15,
     alignSelf: "center"
+  },
+  loading: {
+    margin: 20,
   }
 });
