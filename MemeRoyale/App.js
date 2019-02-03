@@ -10,6 +10,7 @@ import { createStackNavigator, createAppContainer } from "react-navigation";
 import MemeVoting from "./Pages/MemeVoting";
 import { createSocket } from "./socket";
 import LoginScreen from './Pages/Login';
+console.disableYellowBox = true;
 
 export default class App extends React.Component {
   constructor(props) {
