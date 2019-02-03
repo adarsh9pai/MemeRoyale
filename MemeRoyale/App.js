@@ -12,6 +12,7 @@ import NewRoom from './Pages/NewRoom';
 import CreateMeme from './Pages/CreateMeme';
 import {createStackNavigator, createAppContainer} from 'react-navigation';
 import MemeVoting from './Pages/MemeVoting';
+import clientID from './secret'
 
 export default class App extends React.Component {
   constructor(props) {
@@ -19,12 +20,17 @@ export default class App extends React.Component {
 
     this.state = {
       isLoading: true,
-      loggedIn : true,
+      loggedIn : false,
       email : 'NaN',
       image: 'img://'
     }
   }
 
+  createUser = async(email) =>{
+    const response = await fetch('http://34.238.153.107/users/create?username='+email)
+    const getResponse = await response.json()
+    return getResponse
+  }
 
 
   googleOAuthLogin = async () => {
@@ -41,6 +47,7 @@ export default class App extends React.Component {
           email: result.user.email,
           image: result.user.photoUrl
         });
+        createUser(this.state.email)
       } else {
         alert("Oof");
       }
