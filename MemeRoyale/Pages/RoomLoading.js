@@ -35,7 +35,7 @@ export default class RoomLoading extends React.Component {
       getUsersinRoom(room.code).then(users => {
         this.setState({ users });
       });
-    }, 1000 * 2);
+    }, 1000 * 1);
 
     // Set an iterval to check if the game has started
     this.checkIfGameStartedTimer = setInterval(() => {

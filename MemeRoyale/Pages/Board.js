@@ -71,7 +71,7 @@ export default class Board extends React.Component {
       else {
         this.hasMemeBeenSelectedTimer = setInterval(() => {
           getRoom(this.room.code).then(room => {
-            console.log("checking has meme been selected");
+            console.log("checking has meme been selected", this.user);
             if (room.isMemeSelected) {
               clearInterval(this.hasMemeBeenSelectedTimer);
               this.props.navigation.navigate("CreateMeme", {

@@ -31,7 +31,7 @@ export default class Rooms extends React.Component {
     getRooms().then(rooms => this.setState({ rooms }));
 
     this.getRoomsInterval = setInterval(
-      () => getRooms().then(rooms => this.setState({ rooms })),
+      () => {getRooms().then(rooms => this.setState({ rooms }))},
       1000 * 2
     );
   }

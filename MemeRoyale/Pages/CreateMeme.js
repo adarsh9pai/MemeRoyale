@@ -52,7 +52,7 @@ export default class CreateMeme extends React.Component {
           });
         }
       });
-    });
+    }, 1000 * 1);
   };
 
   handleTextChange = id => text => {
