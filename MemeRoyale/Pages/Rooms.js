@@ -18,6 +18,10 @@ export default class Rooms extends React.Component {
     };
   }
 
+  refresh = ()=>{
+    getRooms().then(rooms => this.setState({ rooms }));
+  }
+
   componentDidMount() {
     getRooms().then(rooms => this.setState({ rooms }));
   }

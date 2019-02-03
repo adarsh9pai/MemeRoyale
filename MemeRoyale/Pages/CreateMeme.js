@@ -12,6 +12,8 @@ import {
 } from "react-native-elements";
 import { getRooms } from "../API/Rooms";
 import { defaultStyles } from "./styles";
+import SocketIOClient from 'socket.io-client';
+
 
 const styles = StyleSheet.create({
   ...defaultStyles
@@ -23,7 +25,21 @@ export default class CreateMeme extends React.Component {
 
     this.state = {
         caption: '',
+        username: 'adarsh9pai@gmail.com',
+        roomName:'3F41',
+        roomNumber: '3F41',
+        data: ''
     };
+
+    this.socket = SocketIOClient('http://34.238.153.107')
+    this.socket.emit('user',this.state.username)
+    this.socket.emit('room', {
+      name:this.state.roomName,
+      code:this.state.roomNumber
+    })
+    this.socket.on('debug',(data)=>{
+      console.log(data)
+    })
   }
 
   handleTextChange = id => text => {
@@ -44,10 +60,20 @@ export default class CreateMeme extends React.Component {
           <Input
             placeholder="Caption"
             style={styles.text}
-            onChangeText={this.handleTextChange('caption')}
+            onChangeText={(data)=>{
+              this.setState({data})  
+            }}
           />
 
-          <Button buttonStyle={styles.button} title='Submit'></Button>
+          <Button buttonStyle={styles.button} title='Submit' onPress = {
+            ()=>{
+              this.socket.emit('caption',{
+                name:this.state.username,
+                code:this.state.roomNumber,
+                caption:this.state.data
+              })
+            }
+          }></Button>
       </View>
     );
   }

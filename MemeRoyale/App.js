@@ -90,12 +90,15 @@ const styles = StyleSheet.create({
 });
 
 const AppNavigator = createStackNavigator({
+  CreateMeme: {
+    screen: CreateMeme
+  },
   Rooms: {
     screen: Rooms
   },
   NewRoom:{
     screen: NewRoom
-  }
+  },
 })
 const AppContainer = createAppContainer(AppNavigator)
 
