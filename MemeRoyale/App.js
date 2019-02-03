@@ -19,6 +19,7 @@ import { createStackNavigator, createAppContainer } from "react-navigation";
 import MemeVoting from "./Pages/MemeVoting";
 import { defaultStyles } from "./Pages/styles";
 import clientID from './secret'
+import Modal from 'react-native-modal'
 
 const styles = StyleSheet.create({
   container: {
@@ -38,7 +39,8 @@ export default class App extends React.Component {
     this.state = {
       signedIn:false,
       email : 'NaN',
-      image: 'img://'
+      image: 'img://',
+      name: 'xxxtentacion'
     }
   }
 
@@ -61,7 +63,8 @@ export default class App extends React.Component {
         this.setState({
           signedIn: true,
           email: result.user.email,
-          photoUrl: result.user.photoUrl
+          photoUrl: result.user.photoUrl,
+          name: result.user.name
         })
         this.createUser(this.state.email)
       } else {
@@ -153,3 +156,4 @@ const AppNavigator = createStackNavigator({
   }
 });
 const AppContainer = createAppContainer(AppNavigator);
+
