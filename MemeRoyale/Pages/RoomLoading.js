@@ -8,27 +8,49 @@ import {
   ListItem,
   Divider
 } from "react-native-elements";
-import { getRooms } from "../API/Rooms";
-import { defaultStyles } from './styles';
+import { getUsersinRoom } from "../API/Rooms";
+import { defaultStyles } from "./styles";
 
 const styles = StyleSheet.create({
-    ...defaultStyles,
-    
-})
+  ...defaultStyles
+});
 
 export default class RoomLoading extends React.Component {
   constructor(props) {
     super(props);
 
-    this.state = {};
+    this.state = {
+      users: []
+    };
+  }
+
+  componentDidMount() {
+    // const room = this.props.state.params.state.room;
+    const room = this.props.navigation.getParam("room", null);
+    const user = this.props.navigation.getParam("user", null);
+    const socket = this.props.navigation.getParam("socket", null);
+    //console.log(room, user, socket);
+
+    getUsersinRoom(room.code).then(users => {
+      console.log('users', users);
+      this.setState({ users });
+    });
   }
 
   render() {
+    const { users } = this.state;
     return (
-      <View>
-
-        <Text h4 style={styles.text}>Lords</Text>
-        <Divider></Divider>
+      <View style={styles.background}>
+        <Text h4 style={styles.text}>
+          Lords
+        </Text>
+        <Divider />
+        <View>
+          {users.length ? <Text>No one in the room yet!</Text> : null}
+          {users.map((user, i) => (
+            <ListItem key={i} title={user.name} />
+          ))}
+        </View>
       </View>
     );
   }

@@ -31,15 +31,15 @@ export default class CreateMeme extends React.Component {
 
     };
 
-    this.socket = SocketIOClient('http://34.238.153.107')
-    this.socket.emit('user',this.state.username)
-    this.socket.emit('room', {
-      name:this.state.roomName,
-      code:this.state.roomNumber
-    })
-    this.socket.on('debug',(data)=>{
-      console.log(data)
-    })
+    // this.socket = SocketIOClient('http://34.238.153.107')
+    // this.socket.emit('user',this.state.username)
+    // this.socket.emit('room', {
+    //   name:this.state.roomName,
+    //   code:this.state.roomNumber
+    // })
+    // this.socket.on('debug',(data)=>{
+    //   console.log(data)
+    // })
   }
 
 

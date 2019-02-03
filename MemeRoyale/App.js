@@ -35,7 +35,7 @@ export default class App extends React.Component {
 
     this.state = {
       isLoading: false,
-      loggedIn: false,
+      loggedIn: true,
       email: "NaN",
       image: "img://"
     };
@@ -103,6 +103,9 @@ const LoginScreen = props => {
 const AppNavigator = createStackNavigator({
   Rooms: {
     screen: Rooms
+  },
+  RoomLoading: {
+    screen: RoomLoading,
   },
   CreateMeme: {
     screen: CreateMeme

@@ -11,6 +11,7 @@ import {
 import { getRooms } from "../API/Rooms";
 import { defaultStyles } from "./styles";
 import { ScrollView } from "react-native-gesture-handler";
+import SocketIOClient from "socket.io-client";
 
 const styles = StyleSheet.create({
   ...defaultStyles,
@@ -22,28 +23,52 @@ export default class Rooms extends React.Component {
     super(props);
 
     this.state = {
-      rooms: [
-        {name: 'Room #1', numPeople: 12},
-        {name: 'Room #2', numPeople: 5},
-        {name: 'Room #3', numPeople: 8},
-        {name: 'Room #4', numPeople: 2},
-      ]
+      username: "adarsh9pai@gmail.com", // update later from oAUth
+      rooms: []
     };
+
+    // Setup the socket
+    this.socket = SocketIOClient("http://34.238.153.107");
+    this.socket.emit("user", this.state.username);
   }
 
-  refresh = ()=>{
+  refresh = () => {
     getRooms().then(rooms => this.setState({ rooms }));
-  }
+  };
 
   componentDidMount() {
     getRooms().then(rooms => this.setState({ rooms }));
   }
 
   handleRoomPress = room => () => {
-    alert(room.name);
+    const { username } = this.state;
+
+    // Set the joined room to the state
+    this.setState({ room: room }, () => {
+      
+      // Setup the room once it has been selected
+      this.socket.emit("room", {
+        name: room.name,
+        code: room.code
+      });
+
+      this.socket.on("debug", data => {
+        console.log(data);
+
+        // Navigate to the page that displays which users are in the room
+        this.props.navigation.navigate("RoomLoading", {
+          room: room,
+          user: username,
+          socket: this.socket
+        });
+      });
+    });
   };
 
-  handleAddRoom = () => {};
+  handleAddRoom = () => {
+    // Navigate to the page that lets the user create a room
+    this.props.navigation.navigate("NewRoom");
+  };
 
   render() {
     const { rooms } = this.state;
@@ -58,8 +83,8 @@ export default class Rooms extends React.Component {
           {rooms.map((room, i) => (
             <PricingCard
               key={i}
-              color='#4F86C6'
-              containerStyle={{borderRadius: 10}}
+              color="#4F86C6"
+              containerStyle={{ borderRadius: 10 }}
               infoStyle={styles.text}
               title={room.name}
               price={room.numPeople}
@@ -72,7 +97,7 @@ export default class Rooms extends React.Component {
           <Button
             title="Add Room"
             buttonStyle={styles.buttonSecondary}
-            onPress={() => this.props.navigation.navigate("NewRoom")}
+            onPress={this.handleAddRoom}
           />
         </ScrollView>
       </View>
