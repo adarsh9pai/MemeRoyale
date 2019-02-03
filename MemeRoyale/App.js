@@ -37,6 +37,9 @@ const AppNavigator = createStackNavigator({
   Login: {
     screen: LoginScreen
   },
+  SelectMeme: {
+    screen: Board
+  },
   Rooms: {
     screen: Rooms
   },
@@ -51,9 +54,6 @@ const AppNavigator = createStackNavigator({
   },
   Vote: {
     screen: MemeVoting
-  },
-  SelectMeme: {
-    screen: Board
   },
   MemeResults: {
     screen: MemeResults
