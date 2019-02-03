@@ -11,7 +11,7 @@ import {
 import { getRooms } from "../API/Rooms";
 import { defaultStyles } from "./styles";
 import { ScrollView } from "react-native-gesture-handler";
-import SocketIOClient from "socket.io-client";
+import { connectRoom } from "../socket";
 
 const styles = StyleSheet.create({
   ...defaultStyles,
@@ -26,10 +26,6 @@ export default class Rooms extends React.Component {
       username: "adarsh9pai@gmail.com", // update later from oAUth
       rooms: []
     };
-
-    // Setup the socket
-    this.socket = SocketIOClient("http://34.238.153.107");
-    this.socket.emit("user", this.state.username);
   }
 
   refresh = () => {
@@ -47,21 +43,24 @@ export default class Rooms extends React.Component {
     this.setState({ room: room }, () => {
       
       // Setup the room once it has been selected
-      this.socket.emit("room", {
-        name: room.name,
-        code: room.code
+      // this.socket.emit("room", {
+      //   name: room.name,
+      //   code: room.code
+      // });
+      connectRoom(room);
+      
+      // Navigate to the page that displays which users are in the room
+      this.props.navigation.navigate("RoomLoading", {
+        room: room,
+        user: username,
+        socket: this.socket
       });
 
-      this.socket.on("debug", data => {
-        console.log(data);
+      // this.socket.on("debug", data => {
+      //   console.log(data);
 
-        // Navigate to the page that displays which users are in the room
-        this.props.navigation.navigate("RoomLoading", {
-          room: room,
-          user: username,
-          socket: this.socket
-        });
-      });
+        
+      // });
     });
   };
 

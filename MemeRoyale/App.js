@@ -18,8 +18,9 @@ import CreateMeme from "./Pages/CreateMeme";
 import { createStackNavigator, createAppContainer } from "react-navigation";
 import MemeVoting from "./Pages/MemeVoting";
 import { defaultStyles } from "./Pages/styles";
-import clientID from './secret'
-import Modal from 'react-native-modal'
+import clientID from "./secret";
+import Modal from "react-native-modal";
+import { createSocket, connectUser } from "./socket";
 
 const styles = StyleSheet.create({
   container: {
@@ -31,25 +32,29 @@ const styles = StyleSheet.create({
   ...defaultStyles
 });
 
-
 export default class App extends React.Component {
   constructor(props) {
     super(props);
 
     this.state = {
-      signedIn:false,
-      email : 'NaN',
-      image: 'img://',
-      name: 'xxxtentacion'
-    }
+      signedIn: false,
+      email: "NaN",
+      image: "img://",
+      name: "xxxtentacion"
+    };
+
+    // Setup the socket
+    createSocket();
   }
 
-  createUser = async(email) =>{
-    const response = await fetch('http://34.238.153.107/users/create?username='+email)
-    const getResponse = await response.json()
-    console.log(getResponse)
-    return getResponse
-  }
+  createUser = async email => {
+    const response = await fetch(
+      "http://34.238.153.107/users/create?username=" + email
+    );
+    const getResponse = await response.json();
+    console.log(getResponse);
+    return getResponse;
+  };
 
   googleOAuthLogin = async () => {
     try {
@@ -58,23 +63,30 @@ export default class App extends React.Component {
         iosClientId: clientID.ios,
         scopes: ["profile", "email"],
         behavior: "web"
-      })
+      });
       if (result.type === "success") {
-        this.setState({
-          signedIn: true,
-          email: result.user.email,
-          photoUrl: result.user.photoUrl,
-          name: result.user.name
-        })
-        this.createUser(this.state.email)
+        this.setState(
+          {
+            signedIn: true,
+            email: result.user.email,
+            photoUrl: result.user.photoUrl,
+            name: result.user.name
+          },
+
+          // Create the user once the state has been setup
+          () => {
+            this.createUser(this.state.email);
+            connectUser(this.state.email);
+          }
+        );
       } else {
-        console.log("cancelled")
+        console.log("cancelled");
       }
-} catch (e) {
-      console.log("error", e)
+    } catch (e) {
+      console.log("error", e);
     }
-}
-/*
+  };
+  /*
   googleOAuthLogin = async () => {
     try {
       const result = await Google.logInAsync({
@@ -106,8 +118,6 @@ export default class App extends React.Component {
   }
 
   render() {
-    const { isLoading, loggedIn } = this.state;
-
     if (this.state.signedIn == false) {
       return (
         <SafeAreaView style={styles.container}>
@@ -115,7 +125,7 @@ export default class App extends React.Component {
         </SafeAreaView>
       );
     } else {
-      return <AppContainer style={styles.background} />;
+      return <AppContainer style={styles.background} soc/>;
     }
   }
 }
@@ -123,7 +133,11 @@ export default class App extends React.Component {
 const LoginScreen = props => {
   return (
     <View>
-      <Image source={require('./assets/images/logo.png')} resizeMode='contain' style={{width: 200}}/>
+      <Image
+        source={require("./assets/images/logo.png")}
+        resizeMode="contain"
+        style={{ width: 200 }}
+      />
       <SocialIcon
         title="Sign in with G+"
         button
@@ -140,7 +154,7 @@ const AppNavigator = createStackNavigator({
     screen: Rooms
   },
   RoomLoading: {
-    screen: RoomLoading,
+    screen: RoomLoading
   },
   CreateMeme: {
     screen: CreateMeme
@@ -159,4 +173,3 @@ const AppNavigator = createStackNavigator({
   }
 });
 const AppContainer = createAppContainer(AppNavigator);
-
