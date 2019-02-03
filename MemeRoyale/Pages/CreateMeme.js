@@ -66,7 +66,7 @@ export default class CreateMeme extends React.Component {
             <Image
               style={styles.meme}
               resizeMode="contain"
-              source={require("../assets/images/elephant.jpg")}
+              source={{uri:this.props.navigation.getParam('selectedImage')}}
             />
 
             <Input

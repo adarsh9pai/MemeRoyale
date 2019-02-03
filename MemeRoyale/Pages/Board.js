@@ -93,8 +93,10 @@ export default class Board extends React.Component {
     this.setState({ index: this.state.index + 1 });
   };
 
-  handleSelectMeme = (url = 'https://en.wikipedia.org/wiki/File:African_Bush_Elephant.jpg') => {
-    selectMeme(this.room.code, url).then(() => {
+
+  handleSelectMeme = (url = 'https://en.wikipedia.org/wiki/File:African_Bush_Elephant.jpg') => () => {
+  console.log(url);  
+  selectMeme(this.room.code, url).then(() => {
       this.props.navigation.navigate("CreateMeme", {
         room: this.room,
         user: this.user
@@ -120,21 +122,11 @@ export default class Board extends React.Component {
         renderItem={({ item }) => (
           <Card>
           <CardImage source={{uri: item.link}} />
-        <CardButton onPress={() => {
-          this.setState({selectedImage:item.link})
-          console.log(this.state.selectedImage)
-          }} title="Select" color="blue"/>
+        <CardButton onPress={this.handleSelectMeme(item.link)} title="Select" color="blue"/>
         </Card>
         )}
         />
-          <View>
-            <Button
-              title="Next"
-              onPress={this.handleNext}
-              buttonStyle={styles.button}
-            />
-    
-          </View>
+          
         </View>
       );
     }
