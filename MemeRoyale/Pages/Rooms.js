@@ -36,7 +36,7 @@ export default class Rooms extends React.Component {
   }
 
   componentDidMount() {
-    //getRooms().then(rooms => this.setState({ rooms }));
+    getRooms().then(rooms => this.setState({ rooms }));
   }
 
   handleRoomPress = room => () => {
