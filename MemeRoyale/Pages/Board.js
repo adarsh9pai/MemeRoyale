@@ -82,6 +82,7 @@ export default class Board extends React.Component {
     this.props.navigation.navigate("CreateMeme", {
       room: this.room,
       user: this.user,
+      selectedImage: this.selectedImage
     });
   };
   
@@ -106,18 +107,12 @@ export default class Board extends React.Component {
         <CardButton onPress={() => {
           this.setState({selectedImage:item.link})
           console.log(this.state.selectedImage)
+          this.handleSelectMeme()
           }} title="Select" color="blue"/>
         </Card>
         )}
         />
-          <View>
-            <Button
-              title="Next"
-              onPress={this.handleNext}
-              buttonStyle={styles.button}
-            />
-    
-          </View>
+          
         </View>
       );
     }
