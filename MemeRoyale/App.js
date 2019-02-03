@@ -18,6 +18,7 @@ import CreateMeme from "./Pages/CreateMeme";
 import { createStackNavigator, createAppContainer } from "react-navigation";
 import MemeVoting from "./Pages/MemeVoting";
 import { defaultStyles } from "./Pages/styles";
+import clientID from './secret'
 
 const styles = StyleSheet.create({
   container: {
@@ -35,7 +36,7 @@ export default class App extends React.Component {
     super(props);
 
     this.state = {
-      loggedIn : false,
+      signedIn:false,
       email : 'NaN',
       image: 'img://'
     }
@@ -44,11 +45,33 @@ export default class App extends React.Component {
   createUser = async(email) =>{
     const response = await fetch('http://34.238.153.107/users/create?username='+email)
     const getResponse = await response.json()
+    console.log(getResponse)
     return getResponse
   }
 
-
-
+  googleOAuthLogin = async () => {
+    try {
+      const result = await Google.logInAsync({
+        androidClientId: clientID.android,
+        iosClientId: clientID.ios,
+        scopes: ["profile", "email"],
+        behavior: "web"
+      })
+      if (result.type === "success") {
+        this.setState({
+          signedIn: true,
+          email: result.user.email,
+          photoUrl: result.user.photoUrl
+        })
+        this.createUser(this.state.email)
+      } else {
+        console.log("cancelled")
+      }
+} catch (e) {
+      console.log("error", e)
+    }
+}
+/*
   googleOAuthLogin = async () => {
     try {
       const result = await Google.logInAsync({
@@ -71,7 +94,7 @@ export default class App extends React.Component {
       console.log("error", e);
     }
   };
-
+*/
   componentDidMount() {
     Font.loadAsync({
       barlow: require("./assets/fonts/Barlow/Barlow-Medium.ttf"),
@@ -82,7 +105,7 @@ export default class App extends React.Component {
   render() {
     const { isLoading, loggedIn } = this.state;
 
-    if (!loggedIn) {
+    if (this.state.signedIn == false) {
       return (
         <SafeAreaView style={styles.container}>
           <LoginScreen googleOAuthLogin={this.googleOAuthLogin} />
