@@ -2,7 +2,8 @@ import React from "react";
 import SafeAreaView from "react-native-safe-area-view";
 import {
   SocialIcon,
-  Image
+  Image,
+  Text
 } from "react-native-elements";
 import {StyleSheet} from 'react-native';
 import { Google } from "expo";
@@ -16,7 +17,7 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         backgroundColor: "#fff",
-        alignItems: "center",
+        alignItems: 'center',
         justifyContent: "center"
       },
 })
@@ -59,8 +60,9 @@ export default class Login extends React.Component {
         <Image
           source={require("../assets/images/logo.png")}
           resizeMode="contain"
-          style={{ width: 200 }}
+          style={{ height: 150 }}
         />
+        <Text h3 style={styles.textCenter}>Meme Royale</Text>
         <SocialIcon
           title="Sign in with G+"
           button

@@ -58,6 +58,7 @@ export default class MemeVoting extends React.Component {
     // Submit a vote to the API
     const { captions, checkedCaption } = this.state;
 
+    console.log(this.user, 'is voting for', captions[checkedCaption].name);
     castVote(this.room.code, captions[checkedCaption].name);
     this.setState({ hasSubmitted: true });
 

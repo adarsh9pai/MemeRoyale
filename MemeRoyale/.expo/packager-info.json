@@ -2,8 +2,8 @@
   "expoServerPort": 19000,
   "expoServerNgrokUrl": "https://6n-zet.anonymous.memeroyale.exp.direct",
   "packagerNgrokUrl": "https://packager.6n-zet.anonymous.memeroyale.exp.direct",
-  "ngrokPid": 1160,
+  "ngrokPid": 3128,
   "devToolsPort": 19002,
   "packagerPort": 19001,
-  "packagerPid": 14196
+  "packagerPid": 7648
 }

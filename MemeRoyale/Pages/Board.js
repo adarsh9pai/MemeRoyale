@@ -79,14 +79,13 @@ export default class Board extends React.Component {
                 user: this.user
               });
             }
-          }),
-            1000 * 1;
-        });
+          });
+        }, 1000 * 1);
       }
-    });
 
-    this.setState({
-      imagesIndex: kYMTrending
+      this.setState({
+        imagesIndex: kYMTrending
+      });
     });
   }
 

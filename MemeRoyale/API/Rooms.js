@@ -44,7 +44,7 @@ export const selectMeme = async (roomCode, memeURL) => {
 
 export const castVote = async (roomCode, userVotedFor) => {
   const response = await fetch(
-    `${baseURL}/rooms/meme/vote?room=${roomCode}&user=${userVotedFor}`
+    `${baseURL}/rooms/meme/vote?room=${roomCode}&name=${userVotedFor}`
   );
   const getResponse = await response.json();
 };
@@ -55,4 +55,11 @@ export const getWinner = async (roomCode) => {
   );
   const getResponse = await response.json();
   return getResponse[0];
+};
+
+export const nextRound = async (roomCode) => {
+  const response = await fetch(
+    `${baseURL}/rooms/round?room=${roomCode}`
+  );
+  const getResponse = await response.json();
 };

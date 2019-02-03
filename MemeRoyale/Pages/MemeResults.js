@@ -14,7 +14,7 @@ import {
   Badge
 } from "react-native-elements";
 import { defaultStyles } from "./styles";
-import { getWinner, getRoom } from "../API/Rooms";
+import { getWinner, getRoom, nextRound, getUsersinRoom } from "../API/Rooms";
 
 const styles = StyleSheet.create({
   ...defaultStyles
@@ -29,6 +29,7 @@ export default class MemeResults extends React.Component {
       winner: "",
       memeURL: "",
       captions: [],
+      users: [],
     };
   }
 
@@ -36,24 +37,41 @@ export default class MemeResults extends React.Component {
     this.user = this.props.navigation.getParam("user", null);
     this.room = this.props.navigation.getParam("room", null);
 
-    getWinner(this.room.code).then(user => {
+    console.log('in results', this.user, this.room);
+
+    getUsersinRoom(this.room.code).then(users => {
+      //const maxScore = Math.max(users.map(user => user.score));
+      //const winner = users.find(user => user.score === maxScore);
+
       getRoom(this.room.code).then(room => {
         this.setState({
           captions: room.captions,
           isLoading: false,
           memeURL: room.currentMeme,
-          winner: user.name
+          //winner: winner.name,
+          users: users,
         });
       });
-    });
+    })
+  }
+
+  handleNextRound = () => {
+    nextRound(this.room.code).then(res => {
+      console.log(res, 'going to next round');
+      this.props.navigation.navigator('SelectMeme', {
+        room: this.room,
+        user: this.user,
+      })
+    })
   }
 
   render() {
-    const { isLoading, memeURL, winner, captions } = this.state;
+    const { isLoading, memeURL, winner, captions, users } = this.state;
 
     if (isLoading) {
       return (
         <View style={styles.background}>
+        <Text>Results</Text>
           <ActivityIndicator />
         </View>
       );
@@ -62,7 +80,7 @@ export default class MemeResults extends React.Component {
         <View>
           <ScrollView>
             <Text h4 style={styles.textCenter}>
-              Congrats {winner}
+              Results! {winner}
             </Text>
             <Image
               style={styles.meme}
@@ -76,13 +94,13 @@ export default class MemeResults extends React.Component {
               containerStyle={{ position: "relative" }}
             />
 
-            <Button title="Next" buttonStyle={styles.button} />
-
             <Divider />
-            <Text style={styles.textCenter}>Other captions</Text>
+            <Text style={styles.textCenter}>All captions</Text>
             {captions.map((caption, i) => (
-              <ListItem key={i} title={caption.caption} subtitle={caption.name} />
+              <ListItem key={i} title={caption.caption} subtitle={`${caption.name} - ${users.find(user => user.name === caption.name).score} Pts`} />
             ))}
+
+            <Button buttonStyle={styles.buttonSecondary} title='Next Round' onPress={this.handleNextRound}></Button>
           </ScrollView>
         </View>
       );
