@@ -1,11 +1,8 @@
 import React from "react";
 import { StyleSheet, View } from "react-native";
 import {
-  Header,
   Button,
-  Icon,
   Text,
-  ListItem,
   PricingCard
 } from "react-native-elements";
 import { getRooms } from "../API/Rooms";
@@ -23,9 +20,11 @@ export default class Rooms extends React.Component {
     super(props);
 
     this.state = {
-      username: "adarsh9pai@gmail.com", // update later from oAUth
       rooms: []
     };
+
+    this.getRoomsInterval = null;
+    this.user = this.props.navigation.getParam("user", null);
   }
 
   refresh = () => {
@@ -34,39 +33,35 @@ export default class Rooms extends React.Component {
 
   componentDidMount() {
     getRooms().then(rooms => this.setState({ rooms }));
+
+    this.getRoomsInterval = setInterval(
+      () => getRooms().then(rooms => this.setState({ rooms })),
+      1000 * 2
+    );
+  }
+
+  componentWillUnmount() {
+    clearInterval(this.getRoomsInterval);
   }
 
   handleRoomPress = room => () => {
-    const { username } = this.state;
-
     // Set the joined room to the state
     this.setState({ room: room }, () => {
-      
-      // Setup the room once it has been selected
-      // this.socket.emit("room", {
-      //   name: room.name,
-      //   code: room.code
-      // });
       connectRoom(room);
-      
+
       // Navigate to the page that displays which users are in the room
       this.props.navigation.navigate("RoomLoading", {
         room: room,
-        user: username,
-        socket: this.socket
+        user: this.user,
       });
-
-      // this.socket.on("debug", data => {
-      //   console.log(data);
-
-        
-      // });
     });
   };
 
   handleAddRoom = () => {
     // Navigate to the page that lets the user create a room
-    this.props.navigation.navigate("NewRoom");
+    this.props.navigation.navigate("NewRoom", {
+      user: this.user,
+    });
   };
 
   render() {

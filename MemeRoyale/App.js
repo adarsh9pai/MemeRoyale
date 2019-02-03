@@ -1,14 +1,5 @@
 import React from "react";
-import { StyleSheet, Text, View } from "react-native";
-import { Font, AppLoading } from "expo";
-import SafeAreaView from "react-native-safe-area-view";
-import {
-  Button,
-  registerCustomIconType,
-  SocialIcon,
-  Image
-} from "react-native-elements";
-import { Google } from "expo";
+import { Font } from "expo";
 import Rooms from "./Pages/Rooms";
 import RoomLoading from "./Pages/RoomLoading";
 import Board from "./Pages/Board";
@@ -17,99 +8,19 @@ import NewRoom from "./Pages/NewRoom";
 import CreateMeme from "./Pages/CreateMeme";
 import { createStackNavigator, createAppContainer } from "react-navigation";
 import MemeVoting from "./Pages/MemeVoting";
-import { defaultStyles } from "./Pages/styles";
-import clientID from "./secret";
-import Modal from "react-native-modal";
-import { createSocket, connectUser } from "./socket";
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: "#fff",
-    alignItems: "center",
-    justifyContent: "center"
-  },
-  ...defaultStyles
-});
+import { createSocket } from "./socket";
+import LoginScreen from './Pages/Login';
 
 export default class App extends React.Component {
   constructor(props) {
     super(props);
 
-    this.state = {
-      signedIn: false,
-      email: "NaN",
-      image: "img://",
-      name: "xxxtentacion"
-    };
+    this.state = {};
 
     // Setup the socket
     createSocket();
   }
 
-  createUser = async email => {
-    const response = await fetch(
-      "http://34.238.153.107/users/create?username=" + email
-    );
-    const getResponse = await response.json();
-    console.log(getResponse);
-    return getResponse;
-  };
-
-  googleOAuthLogin = async () => {
-    try {
-      const result = await Google.logInAsync({
-        androidClientId: clientID.android,
-        iosClientId: clientID.ios,
-        scopes: ["profile", "email"],
-        behavior: "web"
-      });
-      if (result.type === "success") {
-        this.setState(
-          {
-            signedIn: true,
-            email: result.user.email,
-            photoUrl: result.user.photoUrl,
-            name: result.user.name
-          },
-
-          // Create the user once the state has been setup
-          () => {
-            this.createUser(this.state.email);
-            connectUser(this.state.email);
-          }
-        );
-      } else {
-        console.log("cancelled");
-      }
-    } catch (e) {
-      console.log("error", e);
-    }
-  };
-  /*
-  googleOAuthLogin = async () => {
-    try {
-      const result = await Google.logInAsync({
-        androidClientId: clientID.android,
-        iosClientId: clientID.ios,
-        scopes: ["profile", "email"],
-        behavior: "web"
-      });
-      if (result === "success") {
-        this.setState({
-          loggedIn: true,
-          email: result.user.email,
-          image: result.user.photoUrl
-        });
-        createUser(this.state.email)
-      } else {
-        alert("Oof");
-      }
-    } catch (e) {
-      console.log("error", e);
-    }
-  };
-*/
   componentDidMount() {
     Font.loadAsync({
       barlow: require("./assets/fonts/Barlow/Barlow-Medium.ttf"),
@@ -118,38 +29,14 @@ export default class App extends React.Component {
   }
 
   render() {
-    if (this.state.signedIn == false) {
-      return (
-        <SafeAreaView style={styles.container}>
-          <LoginScreen googleOAuthLogin={this.googleOAuthLogin} />
-        </SafeAreaView>
-      );
-    } else {
-      return <AppContainer style={styles.background} soc/>;
-    }
+    return <AppContainer/>;
   }
 }
 
-const LoginScreen = props => {
-  return (
-    <View>
-      <Image
-        source={require("./assets/images/logo.png")}
-        resizeMode="contain"
-        style={{ width: 200 }}
-      />
-      <SocialIcon
-        title="Sign in with G+"
-        button
-        type="google"
-        onPress={props.googleOAuthLogin}
-        style={{ width: 200, backgroundColor: "#dd4b39" }}
-      />
-    </View>
-  );
-};
-
 const AppNavigator = createStackNavigator({
+  Login: {
+    screen: LoginScreen
+  },
   Rooms: {
     screen: Rooms
   },

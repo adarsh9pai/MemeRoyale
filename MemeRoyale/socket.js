@@ -17,3 +17,10 @@ export const connectRoom = (room) => {
   });
 };
 
+export const setCreator = (userName, codeID) => {
+    // When a room is created, set the user as the creater
+    socket.emit('creator', {
+        name: userName,
+        code: codeID,
+    })
+}

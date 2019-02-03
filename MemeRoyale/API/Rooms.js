@@ -6,17 +6,33 @@ export const getRooms = async()=>{
     return getResponse.rooms;
 }
 
+export const createUser = async email => {
+    const response = await fetch(`${baseURL}/users/create?username=${email}`);
+    const getResponse = await response.json();
+    return getResponse;
+  };
+
 export const createRoom = async(roomName) => {
     const response = await fetch(`${baseURL}/rooms/create?name=${roomName}`)
     const getResponse = await response.json()
-    console.log(getResponse);
-    // returns a success or failure response
+    return getResponse;
 }
 
 export const getUsersinRoom = async(roomCode) => {
-    console.log('room code', roomCode);
     const response = await fetch(`${baseURL}/users?room=${roomCode}`)
     const getResponse = await response.json()
-    console.log(getResponse);
     return getResponse.users;
 }
+
+export const startGame = async(roomCode) => {
+    const response = await fetch(`${baseURL}/rooms/start?room=${roomCode}`)
+    const getResponse = await response.json()
+}
+
+export const getRoom = async(roomCode) => {
+    const response = await fetch(`${baseURL}/rooms/room?room=${roomCode}`)
+    const getResponse = await response.json()
+    return getResponse[0]
+}
+
+// export const selectMeme = async(roomCode, )

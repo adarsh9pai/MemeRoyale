@@ -1,17 +1,9 @@
 import React from "react";
 import { StyleSheet, View } from "react-native";
-import {
-  Header,
-  Button,
-  Icon,
-  Text,
-  ListItem,
-  Divider,
-  Input
-} from "react-native-elements";
-import { getRooms } from "../API/Rooms";
+import { Button, Text, ListItem, Divider, Input } from "react-native-elements";
 import { defaultStyles } from "./styles";
-import { createRoom } from "../API/Rooms";
+import { createRoom, getUsersinRoom, startGame } from "../API/Rooms";
+import { setCreator, connectRoom } from "../socket";
 
 const styles = StyleSheet.create({
   ...defaultStyles
@@ -23,9 +15,20 @@ export default class NewRoom extends React.Component {
 
     this.state = {
       isRoomActive: false,
-      users: [{ name: "Robert Brady" }],
+      users: [],
       roomName: ""
     };
+
+    this.user = this.props.navigation.getParam("user", null);
+  }
+
+  componentDidMount() {
+    this.getUsersinRoomFunc = null; // set in the createRoom handler
+  }
+
+  componentWillUnmount() {
+    // Destroy the timer functions that is set during the creation of a room
+    clearInterval(this.getUsersinRoomFunc);
   }
 
   handleTextChange = id => text => {
@@ -33,20 +36,41 @@ export default class NewRoom extends React.Component {
   };
 
   handleCreateRoom = () => {
-    createRoom(this.state.roomName);
-    this.setState({ isRoomActive: true });
+    createRoom(this.state.roomName).then(room => {
+      // Set the creator of the room
+      setCreator(this.user, room.code);
+      connectRoom(room);
+
+      // Set an interval to check for new people in the room every 2 seconds
+      this.getUsersinRoomFunc = setInterval(() => {
+        getUsersinRoom(room.code).then(users => {
+          this.setState({ users });
+        });
+      }, 1000 * 2);
+
+      // Set the state to show that it is active
+      this.setState({
+        isRoomActive: true,
+        room
+      });
+    });
   };
 
   handleStartGame = () => {
-    this.props.navigation.navigate("SelectMeme");
-  }
+    const { room } = this.state;
+    
+    startGame(room.code);
+    this.props.navigation.navigate("SelectMeme", {
+      room: room,
+      user: this.user
+    });
+  };
 
   render() {
     const { isRoomActive, users, roomName } = this.state;
 
     return (
       <View style={styles.background}>
-
         {// If the game has started then display the users in the game, otherwise show the 'create' button
         isRoomActive ? (
           <View>
@@ -57,12 +81,16 @@ export default class NewRoom extends React.Component {
             {users.map((user, i) => (
               <ListItem key={i} title={user.name} />
             ))}
-            <Button buttonStyle={styles.buttonSecondary} title='Start' onPress={this.handleStartGame}></Button>
+            <Button
+              buttonStyle={styles.buttonSecondary}
+              title="Start"
+              onPress={this.handleStartGame}
+            />
           </View>
         ) : (
           <View>
-            <Text style={styles.text}>
-              This is a description of what a new room is{" "}
+            <Text style={styles.textCenter}>
+              Create a new room that you and your friends can play in
             </Text>
             <Input
               placeholder="Room Name"

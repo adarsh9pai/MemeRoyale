@@ -6,9 +6,10 @@ import {
   Icon,
   Text,
   ListItem,
-  Divider
+  Divider,
+  registerCustomIconType
 } from "react-native-elements";
-import { getUsersinRoom } from "../API/Rooms";
+import { getUsersinRoom, getRoom } from "../API/Rooms";
 import { defaultStyles } from "./styles";
 
 const styles = StyleSheet.create({
@@ -28,14 +29,32 @@ export default class RoomLoading extends React.Component {
     // const room = this.props.state.params.state.room;
     const room = this.props.navigation.getParam("room", null);
     const user = this.props.navigation.getParam("user", null);
-    const socket = this.props.navigation.getParam("socket", null);
-    //console.log(room, user, socket);
 
-    getUsersinRoom(room.code).then(users => {
-      console.log('users', users);
-      this.setState({ users });
-    });
+    // Set an interval to periodically check if anyone is in the room
+    this.getUsersinRoomFunc = setInterval(() => {
+      getUsersinRoom(room.code).then(users => {
+        this.setState({ users });
+      });
+    }, 1000 * 2);
+
+    // Set an iterval to check if the game has started
+    this.checkIfGameStartedTimer = setInterval(() => {
+      getRoom(room.code).then(room => {
+        console.log("hasstarted", room.hasStarted);
+        // If the game has started, then navigate to the game
+        if (room.hasStarted) {
+          clearInterval(this.getUsersinRoomFunc);
+          clearInterval(this.checkIfGameStartedTimer);
+          this.props.navigation.navigate("SelectMeme", {
+            room: room,
+            user: user
+          });
+        }
+      });
+    }, 1000 * 1);
   }
+
+  componentWillUnmount() {}
 
   render() {
     const { users } = this.state;
@@ -46,7 +65,6 @@ export default class RoomLoading extends React.Component {
         </Text>
         <Divider />
         <View>
-          {users.length ? <Text>No one in the room yet!</Text> : null}
           {users.map((user, i) => (
             <ListItem key={i} title={user.name} />
           ))}
