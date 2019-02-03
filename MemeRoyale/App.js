@@ -93,14 +93,14 @@ const LoginScreen = props =>{
 }
 
 const AppNavigator = createStackNavigator({
+  CreateMeme: {
+    screen: CreateMeme
+  },
   Rooms: {
     screen: Rooms
   },
   NewRoom:{
     screen: NewRoom
-  },
-  CreateMeme: {
-    screen: CreateMeme,
   },
   Vote: {
     screen: MemeVoting,
@@ -111,6 +111,7 @@ const AppNavigator = createStackNavigator({
   MemeResults: {
     screen: MemeResults,
   },
+
 
 })
 const AppContainer = createAppContainer(AppNavigator)

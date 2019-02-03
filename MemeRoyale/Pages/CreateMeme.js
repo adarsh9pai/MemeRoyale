@@ -11,6 +11,8 @@ import {
   Input
 } from "react-native-elements";
 import { defaultStyles } from "./styles";
+import SocketIOClient from 'socket.io-client';
+
 
 const styles = StyleSheet.create({
   ...defaultStyles
@@ -21,23 +23,25 @@ export default class CreateMeme extends React.Component {
     super(props);
 
     this.state = {
-      caption: "",
-      isSubmitted: false
+
+        caption: 'Sample Caption',
+        username: 'adarsh9pai@gmail.com',
+        roomName:'A2A41',
+        roomNumber: 'A2A41',
+
     };
+
+    this.socket = SocketIOClient('http://34.238.153.107')
+    this.socket.emit('user',this.state.username)
+    this.socket.emit('room', {
+      name:this.state.roomName,
+      code:this.state.roomNumber
+    })
+    this.socket.on('debug',(data)=>{
+      console.log(data)
+    })
   }
 
-  handleTextChange = id => text => {
-    this.handleTextChange({ [id]: text });
-  };
-
-  handleSubmitCaption = () => {
-    // Uncomment this line below once it is time for API work
-    //this.setState({isSubmitted: true});
-
-    // API call to check when all users have completed their captions
-    // on completion navigate to the voting page
-    this.props.navigation.navigate("Vote");
-  };
 
   render() {
     const { isSubmitted } = this.state;
@@ -53,16 +57,28 @@ export default class CreateMeme extends React.Component {
               source={require("../assets/images/elephant.jpg")}
             />
 
+
             <Input
               placeholder="Caption"
               style={styles.text}
-              onChangeText={this.handleTextChange("caption")}
+              onChangeText={(data)=>{
+                this.setState({
+                  caption:data
+                })
+              }}
             />
 
             <Button
               buttonStyle={styles.buttonSecondary}
               title="Submit"
-              onPress={this.handleSubmitCaption}
+              onPress={()=>{
+                this.socket.emit('caption',{
+                  name:this.state.username,
+                  caption:this.state.caption,
+                  code: this.state.roomNumber
+                })
+                this.props.navigation.navigate("Vote");
+              }}
             />
           </View>
         ) : (
@@ -74,6 +90,7 @@ export default class CreateMeme extends React.Component {
             <ActivityIndicator style={styles.loading} />
           </View>
         )}
+
       </View>
     );
   }
