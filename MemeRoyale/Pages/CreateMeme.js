@@ -24,11 +24,10 @@ export default class CreateMeme extends React.Component {
 
     this.state = {
 
-        caption: '',
+        caption: 'Sample Caption',
         username: 'adarsh9pai@gmail.com',
-        roomName:'3F41',
-        roomNumber: '3F41',
-        data: ''
+        roomName:'A2A41',
+        roomNumber: 'A2A41',
 
     };
 
@@ -43,18 +42,6 @@ export default class CreateMeme extends React.Component {
     })
   }
 
-  handleTextChange = id => text => {
-    this.handleTextChange({ [id]: text });
-  };
-
-  handleSubmitCaption = () => {
-    // Uncomment this line below once it is time for API work
-    //this.setState({isSubmitted: true});
-
-    // API call to check when all users have completed their captions
-    // on completion navigate to the voting page
-    this.props.navigation.navigate("Vote");
-  };
 
   render() {
     const { isSubmitted } = this.state;
@@ -76,13 +63,24 @@ export default class CreateMeme extends React.Component {
             <Input
               placeholder="Caption"
               style={styles.text}
-              onChangeText={this.handleTextChange("caption")}
+              onChangeText={(data)=>{
+                this.setState({
+                  caption:data
+                })
+              }}
             />
 
             <Button
               buttonStyle={styles.button}
               title="Submit"
-              onPress={this.handleSubmitCaption}
+              onPress={()=>{
+                this.socket.emit('caption',{
+                  name:this.state.username,
+                  caption:this.state.caption,
+                  code: this.state.roomNumber
+                })
+                this.props.navigation.navigate("Vote");
+              }}
             />
           </View>
         ) : (
