@@ -37,12 +37,16 @@ export default class NewRoom extends React.Component {
     this.setState({ isRoomActive: true });
   };
 
+  handleStartGame = () => {
+    this.props.navigation.navigate("SelectMeme");
+  }
+
   render() {
     const { isRoomActive, users, roomName } = this.state;
 
     return (
       <View>
-        <Header leftComponent={{ icon: "menu", color: "#fff" }} />
+        <Header />
 
         {// If the game has started then display the users in the game, otherwise show the 'create' button
         isRoomActive ? (
@@ -54,7 +58,7 @@ export default class NewRoom extends React.Component {
             {users.map((user, i) => (
               <ListItem key={i} title={user.name} />
             ))}
-            <Button buttonStyle={styles.button} title='Start'></Button>
+            <Button buttonStyle={styles.button} title='Start' onPress={this.handleStartGame}></Button>
           </View>
         ) : (
           <View>
