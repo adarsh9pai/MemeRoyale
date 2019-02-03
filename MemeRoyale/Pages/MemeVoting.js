@@ -29,7 +29,9 @@ export default class MemeVoting extends React.Component {
     this.state = {
       captions: [],
       checkedCaption: -1,
-      hasSubmitted: false
+      hasSubmitted: false,
+      memeURL: "",
+      isLoading: true
     };
 
     this.user = this.props.navigation.getParam("user", null);
@@ -37,10 +39,15 @@ export default class MemeVoting extends React.Component {
   }
 
   componentDidMount() {
-      // Get all of the captions
-      getRoom(this.room.code).then(room => {
-          this.setState({captions: room.captions});
-      })
+    // Get all of the captions, url
+    getRoom(this.room.code).then(room => {
+      this.setState({
+        captions: room.captions,
+        memeURL: room.currentMeme,
+        currentChooser: room.currentChooser,
+        isLoading: false
+      });
+    });
   }
 
   handleCaptionPress = i => () => {
@@ -52,7 +59,7 @@ export default class MemeVoting extends React.Component {
     const { captions, checkedCaption } = this.state;
 
     castVote(this.room.code, captions[checkedCaption].name);
-    this.setState({hasSubmitted: true});
+    this.setState({ hasSubmitted: true });
 
     // Set a timer that will wait for all voting to finish before going to the results
     this.waitForVotingToFinishTimer = setInterval(() => {
@@ -70,18 +77,32 @@ export default class MemeVoting extends React.Component {
   };
 
   render() {
-    const { captions, checkedCaption, hasSubmitted } = this.state;
+    const {
+      captions,
+      checkedCaption,
+      hasSubmitted,
+      memeURL,
+      isLoading,
+      currentChooser,
+    } = this.state;
 
-    if (!hasSubmitted) {
+    if (isLoading) {
+      return (
+        <View>
+          <Text style={styles.textCenter}>Loading...</Text>
+          <ActivityIndicator style={styles.loading} />
+        </View>
+      );
+    } else if (!hasSubmitted) {
       return (
         <View style={styles.background}>
           <View>
             <ScrollView>
-              <Text style={styles.textCenter}>{}'s Pick</Text>
+              <Text style={styles.textCenter}>{currentChooser}'s Pick</Text>
               <Image
                 style={styles.meme}
                 resizeMode="contain"
-                source={require("../assets/images/elephant.jpg")}
+                source={{ uri: memeURL }}
               />
 
               <Text style={styles.textCenter}>Pick the best caption</Text>

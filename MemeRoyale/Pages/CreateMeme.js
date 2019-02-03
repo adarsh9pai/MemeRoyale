@@ -4,6 +4,7 @@ import { Button, Text, Image, Input } from "react-native-elements";
 import { defaultStyles } from "./styles";
 import { getRoom } from "../API/Rooms";
 import { addCaption } from "../socket";
+import Loader from "./WaitTime";
 
 const styles = StyleSheet.create({
   ...defaultStyles
@@ -17,16 +18,17 @@ export default class CreateMeme extends React.Component {
       isSubmitted: false,
       memeURL: null,
       caption: "",
+      isLoading: true,
     };
   }
 
   componentDidMount() {
     this.room = this.props.navigation.getParam("room", null);
     this.user = this.props.navigation.getParam("user", null);
-    
+
     getRoom(this.room.code).then(room => {
       // Get the current meme that was selected
-      this.setState({ memeURL: room.currentMeme });
+      this.setState({ memeURL: room.currentMeme, isLoading: false });
     });
   }
 
@@ -34,11 +36,13 @@ export default class CreateMeme extends React.Component {
     const { caption } = this.state;
 
     addCaption(this.user, this.room.code, caption);
-    this.setState({isSubmitted: true});
+    this.setState({ isSubmitted: true });
 
     // Create a timer to wait for everyone to finish submitting their captions
     this.waitToFinishCaptionsTimer = setInterval(() => {
+      console.log('interval parent');
       getRoom(this.room.code).then(room => {
+        console.log('interval child');
         if (room.isSubmissionEnded) {
           clearInterval(this.waitToFinishCaptionsTimer);
 
@@ -47,8 +51,8 @@ export default class CreateMeme extends React.Component {
             user: this.user
           });
         }
-      })
-    })
+      });
+    });
   };
 
   handleTextChange = id => text => {
@@ -56,41 +60,49 @@ export default class CreateMeme extends React.Component {
   };
 
   render() {
-    const { isSubmitted } = this.state;
+    const { isSubmitted, memeURL, isLoading } = this.state;
 
-    return (
-      <View style={styles.background}>
-        {!isSubmitted ? (
-          // Let the user create their own caption
-          <View>
-            <Image
-              style={styles.meme}
-              resizeMode="contain"
-              source={{uri:this.props.navigation.getParam('selectedImage')}}
-            />
+    if (isLoading) {
+      return (
+        <View style={styles.background}>
+          <ActivityIndicator />
+        </View>
+      );
+    } else {
+      return (
+        <View style={styles.background}>
+          {!isSubmitted ? (
+            // Let the user create their own caption
+            <View>
+              <Image
+                style={styles.meme}
+                resizeMode="contain"
+                source={{ uri: memeURL }}
+              />
 
-            <Input
-              placeholder="Caption"
-              style={styles.text}
-              onChangeText={this.handleTextChange("caption")}
-            />
+              <Input
+                placeholder="Caption"
+                style={styles.text}
+                onChangeText={this.handleTextChange("caption")}
+              />
 
-            <Button
-              buttonStyle={styles.buttonSecondary}
-              title="Submit"
-              onPress={this.handleSubmit}
-            />
-          </View>
-        ) : (
-          // tell the user that they need to wait until all other users have finished their captions
-          <View>
-            <Text style={styles.textCenter}>
-              Please wait until all Meme Lord's have finished meme-ing
-            </Text>
-            <ActivityIndicator style={styles.loading} />
-          </View>
-        )}
-      </View>
-    );
+              <Button
+                buttonStyle={styles.buttonSecondary}
+                title="Submit"
+                onPress={this.handleSubmit}
+              />
+            </View>
+          ) : (
+            // tell the user that they need to wait until all other users have finished their captions
+            <View>
+              <Text style={styles.textCenter}>
+                Please wait until all Meme Lord's have finished meme-ing
+              </Text>
+              <ActivityIndicator style={styles.loading} />
+            </View>
+          )}
+        </View>
+      );
+    }
   }
 }

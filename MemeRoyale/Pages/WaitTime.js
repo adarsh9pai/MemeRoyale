@@ -28,7 +28,7 @@ const styles = StyleSheet.create({
 }
   
 
-const Loader = props =>{
+export const Loader = props =>{
     return(
         <View style={{backgroundColor:'#f15c5c'}}>
             <PacmanIndicator size="large" color="#f9c00c" />

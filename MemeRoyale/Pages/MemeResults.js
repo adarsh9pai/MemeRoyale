@@ -3,22 +3,21 @@ import {
   StyleSheet,
   View,
   Image,
-  TouchableHighlight,
+  ActivityIndicator,
   ScrollView
 } from "react-native";
 import {
-  Header,
   Button,
-  Icon,
   Text,
   ListItem,
   Divider,
-  Badge,
+  Badge
 } from "react-native-elements";
 import { defaultStyles } from "./styles";
+import { getWinner, getRoom } from "../API/Rooms";
 
 const styles = StyleSheet.create({
-  ...defaultStyles,
+  ...defaultStyles
 });
 
 export default class MemeResults extends React.Component {
@@ -26,48 +25,67 @@ export default class MemeResults extends React.Component {
     super(props);
 
     this.state = {
-      memes: [
-        { user: "Robert Brady", caption: "Meme caption 1", points: 6 },
-        { user: "James Brady", caption: "Meme caption 1", points: 6 },
-        { user: "Adarsh", caption: "Meme caption 1", points: 6 },
-        { user: "Nahian", caption: "Meme caption 1", points: 6 },
-        { user: "Adarsh", caption: "Meme caption 1", points: 6 },
-        { user: "Adarsh", caption: "Meme caption 1", points: 6 }
-      ]
+      isLoading: true,
+      winner: "",
+      memeURL: "",
+      captions: [],
     };
   }
 
+  componentDidMount() {
+    this.user = this.props.navigation.getParam("user", null);
+    this.room = this.props.navigation.getParam("room", null);
+
+    getWinner(this.room.code).then(user => {
+      getRoom(this.room.code).then(room => {
+        this.setState({
+          captions: room.captions,
+          isLoading: false,
+          memeURL: room.currentMeme,
+          winner: user.name
+        });
+      });
+    });
+  }
+
   render() {
-    const { memes } = this.state;
+    const { isLoading, memeURL, winner, captions } = this.state;
 
-    return (
-      <View>
+    if (isLoading) {
+      return (
+        <View style={styles.background}>
+          <ActivityIndicator />
+        </View>
+      );
+    } else {
+      return (
+        <View>
+          <ScrollView>
+            <Text h4 style={styles.textCenter}>
+              Congrats {winner}
+            </Text>
+            <Image
+              style={styles.meme}
+              resizeMode="contain"
+              source={{ uri: memeURL }}
+            />
 
-        <ScrollView>
-          <Text h4 style={styles.textCenter}>
-            Congrats
-          </Text>
-          <Image
-            style={styles.meme}
-            resizeMode="contain"
-            source={require("../assets/images/elephant.jpg")}
-          />
+            <Badge
+              status="success"
+              value="+1"
+              containerStyle={{ position: "relative" }}
+            />
 
-          <Badge
-            status="success"
-            value='+4'
-            containerStyle={{ position: "relative",  }}
-          />
+            <Button title="Next" buttonStyle={styles.button} />
 
-          <Button title="Next" buttonStyle={styles.button} />
-
-          <Divider />
-          <Text style={styles.textCenter}>Other captions</Text>
-          {memes.map((meme, i) => (
-            <ListItem key={i} title={meme.caption} subtitle={meme.user} />
-          ))}
-        </ScrollView>
-      </View>
-    );
+            <Divider />
+            <Text style={styles.textCenter}>Other captions</Text>
+            {captions.map((caption, i) => (
+              <ListItem key={i} title={caption.caption} subtitle={caption.name} />
+            ))}
+          </ScrollView>
+        </View>
+      );
+    }
   }
 }
