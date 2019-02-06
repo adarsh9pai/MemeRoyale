@@ -1,4 +1,4 @@
-const baseURL = "http://34.238.153.107";
+const baseURL = /* INSERT IP HERE*/;
 
 export const getRooms = async () => {
   const response = await fetch(`${baseURL}/rooms`);
