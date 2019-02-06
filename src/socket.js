@@ -2,7 +2,7 @@ import openSocket from "socket.io-client";
 let socket = null;
 
 export const createSocket = () => {
-  socket = openSocket("http://34.238.153.107");
+  socket = openSocket(/*insert IP here*/ );
 };
 
 export const connectUser = email => {
